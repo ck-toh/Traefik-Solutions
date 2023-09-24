@@ -20,8 +20,8 @@ services:
       - "--providers.docker=true"
       #- "--providers.file.directory=/etc/traefik/dynamic_conf"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.dnstcp.address=:53"
-      - "--entrypoints.dnsudp.address=:53/udp"
+      #- "--entrypoints.dnstcp.address=:53"
+      #- "--entrypoints.dnsudp.address=:53/udp"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.traefik.address=:8080"
@@ -31,8 +31,8 @@ services:
     networks:
       - traefik
     ports:
-      - 53:53
-      - 53:53/udp
+      #- 53:53
+      #- 53:53/udp
       - 443:443
       - 80:80
       - 8080:8080
