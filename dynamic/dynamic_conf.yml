@@ -1,0 +1,25 @@
+tls:
+  certificates:
+    - certFile: /etc/ssl/certs/mycert.pem
+      keyFile:  /etc/ssl/private/mycert_priv.key
+http:
+  routers:
+    mywebservice:
+      entryPoints:
+        - websecure
+      rule: Host(`hostname.webserver.com`) && PathPrefix (`/subsite`)
+      middlewares:
+        - stripprefix-mywebservice
+      tls: {}
+      service: mywebservice
+  services:
+    mywebservice:
+      loadBalancer:
+        servers:
+          - url: https://mysite.webserver.com/
+        passHostHeader: true
+  middlewares:
+    stripprefix-mywebservice:
+      stripPrefix:
+        prefixes:
+          - /subsite
