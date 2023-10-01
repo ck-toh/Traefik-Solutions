@@ -27,4 +27,14 @@ All connections are based on HTTPS toward Traefik
       - traefik.http.middlewares.pihole.replacepathregex.replacement=/admin/$$1
       - traefik.http.services.pihole.loadBalancer.server.port=80
       - traefik.docker.network=traefik
+
+/unifi - Ubiquiti UniFi controller
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.unifi.rule=Host(`xenon.localdomain`) #&& (PathPrefix(`/unifi/`) || PathPrefix(`/manage/`))
+      - traefik.http.routers.unifi.entrypoints=websecure
+      - traefik.http.routers.unifi.tls=true
+      - traefik.http.routers.unifi.service=unifi
+      - traefik.http.services.unifi.loadbalancer.server.scheme=https
+      - traefik.http.services.unifi.loadBalancer.server.port=8443
 ```
