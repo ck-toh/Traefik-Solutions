@@ -37,4 +37,14 @@ All connections are based on HTTPS toward Traefik
       - traefik.http.routers.unifi.service=unifi
       - traefik.http.services.unifi.loadbalancer.server.scheme=https
       - traefik.http.services.unifi.loadBalancer.server.port=8443
+
+/wolweb - WOL Web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wolweb.rule=Host(`xenon.localdomain`) && PathPrefix(`/wolweb`)
+      - traefik.http.routers.wolweb.entrypoints=websecure
+      - traefik.http.routers.wolweb.tls=true
+      - traefik.http.routers.wolweb.service=wolweb
+      - traefik.http.services.wolweb.loadbalancer.server.scheme=http
+      - traefik.http.services.wolweb.loadBalancer.server.port=8089
 ```
