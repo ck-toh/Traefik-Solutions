@@ -1,7 +1,7 @@
 # Traefik-Solutions
 ## Host rules change in Traefik v3.
 
-In Traefik v2, Host filer can be multiple hostname seperated by comma, however this nolongers with in v2 instead, we need to define each host separately and use `OR` for matching rule
+In Traefik v2, Host filer can be multiple hostname seperated by comma, however this no longers work in v3. Instead, we need to define each host separately and use `OR` for matching rule
 ```
       # Traefik v2 syntax
       - traefik.http.routers.myapp.rule=Host(`a.localdomain`,`b.localdomain`,`c.localdomain`) && PathPrefix(`/myapp`)
