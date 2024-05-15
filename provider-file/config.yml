@@ -1,0 +1,38 @@
+#tls:
+#  certificates:
+#    - certFile: /etc/ssl/certs/mycert.pem
+#      keyFile: /etc/ssl/private/mycert_priv.key
+http:
+  routers:
+    api:
+      entryPoints:
+        - websecure
+      rule: Host(`traefik.localdomain`) && (PathPrefix(`/dashboard`)||PathRegexp(`^/api/(version|overview|entrypoints|http|tcp|udp)`))
+      service: api@internal
+      tls: {}
+    ping:
+      entryPoints:
+        - websecure
+      rule: Host(`traefik.localdomain`) && Path(`/ping`)
+      service: ping@internal
+      tls: {}
+    xvm:
+      entryPoints:
+        - websecure
+      rule: Host(`traefik.localdomain`) && (PathPrefix(`/`)||PathRegexp(`^/api/(users|system|ws)`))
+      middlewares:
+        - xvm-redirectscheme
+      service: xvm
+      tls: {}
+
+  services:
+    xvm:
+      loadbalancer:
+        servers:
+          - url: https://localhost:8443/
+
+  middlewares:
+    xvm-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
