@@ -7,19 +7,19 @@ http:
     api:
       entryPoints:
         - websecure
-      rule: Host(`traefik.localdomain`) && (PathPrefix(`/dashboard`)||PathRegexp(`^/api/(version|overview|entrypoints|http|tcp|udp)`))
+      rule: HostRegexp(`^.+\.localdomain$`) && (PathPrefix(`/dashboard`)||PathRegexp(`^/api/(version|overview|entrypoints|http|tcp|udp)`))
       service: api@internal
       tls: {}
     ping:
       entryPoints:
         - websecure
-      rule: Host(`traefik.localdomain`) && Path(`/ping`)
+      rule: HostRegexp(`^.+\.localdomain$`) && Path(`/ping`)
       service: ping@internal
       tls: {}
     xvm:
       entryPoints:
         - websecure
-      rule: Host(`traefik.localdomain`) && (PathPrefix(`/`)||PathRegexp(`^/api/(users|system|ws)`))
+      rule: HostRegexp(`^.+\.localdomain$`) && (PathPrefix(`/`)||PathRegexp(`^/api/(users|system|ws)`))
       middlewares:
         - xvm-redirectscheme
       service: xvm
