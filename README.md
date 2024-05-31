@@ -16,7 +16,7 @@ All connections are based on HTTPS toward Traefik
 # /portainer - middleware to remove /portainer before sending to application
     labels:
       - traefik.enable=true
-      - traefik.http.routers.portainer.rule=(Host(`armdock500a.localdomain`)||Host(`armdock500b.localdomain`)) && PathPrefix(`/portainer`)
+      - traefik.http.routers.portainer.rule=(HostRegexp(`^.+\.localdomain$`)||Host(`armdock500b.localdomain`)) && PathPrefix(`/portainer`)
       - traefik.http.routers.portainer.entrypoints=websecure
       - traefik.http.routers.portainer.tls=true
       - traefik.http.routers.portainer.service=portainer
