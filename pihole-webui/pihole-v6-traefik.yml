@@ -49,7 +49,7 @@ services:
       PIHOLE_UID: 0
       FTLCONF_dns_upstreams: 172.88.0.3#5054
       FTLCONF_dns_revServers: 'true,192.168.11.0/24,192.168.11.1,localdomain'
-      FTLCONF_webserver_domain: 'pidns.localdomain'
+      FTLCONF_webserver_domain: 'dns53.localdomain'
       FTLCONF_webserver_port: 8089
       FTLCONF_webserver_api_password: ************
       FTLCONF_dns_listeningMode: 'ALL'
