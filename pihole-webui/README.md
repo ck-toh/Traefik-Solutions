@@ -52,7 +52,7 @@ networks:
 
 ```
 
-## Pi-hole Container
+## Pi-hole v5 Container 
 - Only DNS ports are exposed, WebUI is handled by Traefik
 
 ```
