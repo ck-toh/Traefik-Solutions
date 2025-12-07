@@ -1,0 +1,62 @@
+services:
+  cloudflared:
+    #container_name: cloudflared-dns
+    image: visibilityspots/cloudflared
+    hostname: cloudflare-dns
+    restart: unless-stopped
+    networks:
+      pihole:
+        ipv4_address: 172.88.0.3
+  pihole:
+    image: pihole/pihole:latest
+    #container_name: pi-hole
+    hostname: photon6401
+    depends_on:
+      - cloudflared
+    networks:
+      pihole:
+      traefik:
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      #- 8089:8089
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pihole.rule=(HostRegexp(`^.+\.localdomain$`) && (PathPrefix(`/pihole`) || PathPrefix(`/api`) || PathPrefix(`/admin`)))
+      - traefik.http.routers.pihole.entrypoints=websecure
+      - traefik.http.routers.pihole.tls=true
+      - traefik.http.routers.pihole.middlewares=pihole
+      - traefik.http.middlewares.pihole.redirectRegex.regex=^/admin/(.*)
+      - traefik.http.middlewares.pihole.redirectRegex.replacement=/
+      - traefik.http.services.pihole.loadBalancer.server.port=8089
+      - traefik.docker.network=traefik
+    volumes:
+      - /home/cloud-user/pihole/etc-pihole:/etc/pihole
+      - /home/cloud-user/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    dns:
+      - 127.0.0.1
+      - 192.168.11.1
+    restart: unless-stopped
+    cap_add:
+       - CAP_SYS_NICE
+       - CAP_SYS_TIME
+    #  - NET_ADMIN
+    environment:
+      TZ: Europe/London
+      DNSMASQ_USER: root
+      PIHOLE_UID: 0
+      FTLCONF_dns_upstreams: 172.88.0.3#5054
+      FTLCONF_dns_revServers: 'true,192.168.11.0/24,192.168.11.1,localdomain'
+      FTLCONF_webserver_domain: 'photon6401.localdomain'
+      FTLCONF_webserver_port: 8089
+      FTLCONF_webserver_api_password: 4DPkgqHO
+      FTLCONF_dns_listeningMode: 'ALL'
+      FTLCONF_dns_domain_name: 'localdomain'
+networks:
+  pihole:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.88.0.0/29
+  traefik:
+    external: true
