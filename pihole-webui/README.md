@@ -101,7 +101,7 @@ services:
       TZ: Europe/London
       DNS1: 172.88.0.3#5054
       DNS2: 172.88.0.3#5054
-      WEBPASSWORD: 4DPkgqHO
+      WEBPASSWORD: ************
       DNSMASQ_USER: root
       PIHOLE_UID: 0
 networks:
