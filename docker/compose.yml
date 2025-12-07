@@ -1,0 +1,47 @@
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    command:
+      - "--log.level=DEBUG"
+      - "--log.filePath=/var/log/traefik.log"
+      - "--serversTransport.insecureSkipVerify=true"
+      - "--api.insecure=false"
+      - "--api.dashboard=true"
+      - "--ping=true"
+      - "--ping.entryPoint=ping"
+      - "--ping.manualrouting=true"
+      - "--ping.terminatingStatusCode=204"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    networks:
+      - traefik
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/home/cloud-user/traefik/log/traefik.log:/var/log/traefik.log"
+
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=(HostRegexp(`^.+\.localdomain$`) && (PathPrefix(`/dashboard`)||PathRegexp(`^/api/(overview|version|entrypoints|http|tcp|udp)`)))
+      - traefik.http.routers.api.service=api@internal
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.tls=true
+      - traefik.http.routers.ping.rule=(HostRegexp(`^.+\.localdomain$`) && PathPrefix(`/ping`))
+      - traefik.http.routers.ping.service=ping@internal
+      - traefik.http.routers.ping.entrypoints=websecure
+      - traefik.http.routers.ping.tls=true
+
+networks:
+  traefik:
+    external: true
