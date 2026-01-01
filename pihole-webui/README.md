@@ -1,8 +1,9 @@
 # Pi-Hole v6 with Traefik
-# 1. Create External Docker Network for Traefik
-# 2. Touch /home/cloud-user/traefik/log/traefik.log
-# 3. Start Docker-compose using compose.yml
----
+ 1. Create External Docker Network for Traefik
+ 2. Touch /home/cloud-user/traefik/log/traefik.log
+ 3. Start Docker-compose using compose.yml
+
+```
 services:
   traefik:
     image: traefik:latest
@@ -108,3 +109,4 @@ networks:
     ipam:
       config:
         - subnet: 172.88.0.0/29
+```
